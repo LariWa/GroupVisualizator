@@ -1,0 +1,11 @@
+pages:
+  image: node:latest
+  stage: deploy
+  script:
+    - npx http-server
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - public
+  only:
+    - main
