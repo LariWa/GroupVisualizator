@@ -1,11 +1,10 @@
 {
-  "name": "acad11cd25a7a6e8",
-  "main": "acad11cd25a7a6e8@400.js",
+  "name": "GroupVisualizator",
+  "main": "treeMapSetup.js",
   "version": "400.0.0",
-  "homepage": "https://observablehq.com/d/acad11cd25a7a6e8",
   "author": {
-    "name": "andreamaderthaner",
-    "url": "https://observablehq.com/@andreamaderthaner"
+    "name": "Group1",
+    "url": "https://github.com/LariWa/GroupVisualizator.git"
   },
   "type": "module",
   "peerDependencies": {
