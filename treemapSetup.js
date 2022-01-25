@@ -133,16 +133,17 @@ Further, does it allow for the selection of group members. You can see the group
         function hover(event, d, node) {
           console.log("enter");
           // set the dimensions and margins of the graph
-          const margin = { top: 20, right: 30, bottom: 40, left: 90 },
+          const margin = { top: 20, right: 30, bottom: 30, left: 90 },
             width = 300 - margin.left - margin.right,
             height = 200 - margin.top - margin.bottom;
-
+          var padding = 40;
           // append the svg object to the body of the page
           const svg = d3
             .select("#my_dataviz")
             .append("div")
             .attr("id", "barchart")
             .append("svg")
+            .attr("id", "barchartSVG")
 
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -161,7 +162,19 @@ Further, does it allow for the selection of group members. You can see the group
             .selectAll("text")
             .attr("transform", "translate(-10,0)rotate(-45)")
             .style("text-anchor", "end");
-          data = d.data.barData;
+
+          // data = d.data.barData;
+          data = [
+            { name: "Art", value: d.data.art / 100 },
+            { name: "Math ", value: d.data.math / 100 },
+            { name: "Programming", value: d.data.Programming / 100 },
+
+            {
+              name: "Info \n Visu..",
+              value: d.data.infoVisualization / 100,
+            },
+            { name: "Team Work", value: d.data.TeamWork / 100 },
+          ];
           // Y axis
           const y = d3
             .scaleBand()
@@ -180,7 +193,12 @@ Further, does it allow for the selection of group members. You can see the group
             .attr("width", (d) => x(d.value))
             .attr("height", y.bandwidth())
             .attr("fill", "#69b3a2");
-          d3.select(barchart).append("p").text(d.data.info);
+          d3.select(barchart)
+            .append("p")
+            .text("Interests: " + d.data.hobbies);
+          // d3.select(barchart)
+          //   .append("p")
+          //   .text("Previous classes: " + d.data.Courses);
         }
         function endHover() {
           console.log("leave");
