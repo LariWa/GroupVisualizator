@@ -5,13 +5,16 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="./inspector.css">
+<script src="https://d3js.org/d3.v4.js"></script>
 <body>
+    <div id ="main"></div>
+    <div id="my_dataviz" style="background-color: lightgray;"></div>
+
 <script type="module">
 
 import define from "./index.js";
 import {Runtime, Library, Inspector} from "./runtime.js";
 
 const runtime = new Runtime();
-const main = runtime.module(define, Inspector.into(document.body));
-
+const main = runtime.module(define, Inspector.into(document.getElementById("main")));
 </script>
