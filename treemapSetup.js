@@ -8,11 +8,13 @@ export default function define(runtime, observer) {
     runtime.fileAttachments((name) => fileAttachments.get(name))
   );
   main.variable(observer()).define(["md"], function (md) {
-    return md`
-    # Group Matching Tool
+    return (
+      md `# Group Matching Tool
 
-    This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
-    Further, does it allow for the selection of group members. You can see the group score below the treemap.`;
+This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
+Further, does it allow for the selection of group members. You can see the group score below the treemap.
+`
+    )
   });
   main
     .variable(observer("chart"))
