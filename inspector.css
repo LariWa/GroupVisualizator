@@ -48,6 +48,7 @@ h1 + p {
 
 #members {
   margin-top: 1rem;
+  margin-bottom: 30vh;
 }
 
 #scoreValues {
