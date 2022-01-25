@@ -124,31 +124,22 @@ This [treemap](/@d3/treemap) supports zooming: click any cell to zoom in, or the
             );
         }
         function hover(event, d, node) {
+          console.log("enter");
           // set the dimensions and margins of the graph
-          const margin = { top: 30, right: 30, bottom: 70, left: 60 },
+          const margin = { top: 20, right: 30, bottom: 40, left: 90 },
             width = 460 - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
-          console.log("enter");
+
           // append the svg object to the body of the page
-          // var parent = d3.select(event.target.id);
-          // console.log(event.target.parentNode);
-          // event.target.parentNode.appendChild(
-          //   document.getElementById("my_dataviz")
-          // );
-          // parent.appendChild(d3.select("#my_dataviz").node());
           const svg = d3
             .select("#my_dataviz")
             .append("svg")
-            .attr("pointer-events", "none")
             .attr("id", "barchart")
+
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
-            .attr("pointer-events", "none")
-
-            .attr("transform", `translate(${margin.left},${margin.top})`);
-          console.log(svg);
-
+            .attr("transform", `translate(${margin.left}, ${margin.top})`);
           d3.select("#my_dataviz")
             .style("position", "absolute")
             .style("top", getOffset(event.target).top + 50 + "px")
@@ -157,12 +148,8 @@ This [treemap](/@d3/treemap) supports zooming: click any cell to zoom in, or the
           d3.csv(
             "https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/7_OneCatOneNum_header.csv"
           ).then(function (data) {
-            // X axis
-            const x = d3
-              .scaleBand()
-              .range([0, width])
-              .domain(data.map((d) => d.Country))
-              .padding(0.2);
+            // Add X axis
+            const x = d3.scaleLinear().domain([0, 13000]).range([0, width]);
             svg
               .append("g")
               .attr("transform", `translate(0, ${height})`)
@@ -171,19 +158,23 @@ This [treemap](/@d3/treemap) supports zooming: click any cell to zoom in, or the
               .attr("transform", "translate(-10,0)rotate(-45)")
               .style("text-anchor", "end");
 
-            // Add Y axis
-            const y = d3.scaleLinear().domain([0, 13000]).range([height, 0]);
+            // Y axis
+            const y = d3
+              .scaleBand()
+              .range([0, height])
+              .domain(data.map((d) => d.Country))
+              .padding(0.1);
             svg.append("g").call(d3.axisLeft(y));
 
-            // Bars
+            //Bars
             svg
-              .selectAll("mybar")
+              .selectAll("myRect")
               .data(data)
               .join("rect")
-              .attr("x", (d) => x(d.Country))
-              .attr("y", (d) => y(d.Value))
-              .attr("width", x.bandwidth())
-              .attr("height", (d) => height - y(d.Value))
+              .attr("x", x(0))
+              .attr("y", (d) => y(d.Country))
+              .attr("width", (d) => x(d.Value))
+              .attr("height", y.bandwidth())
               .attr("fill", "#69b3a2");
           });
         }
