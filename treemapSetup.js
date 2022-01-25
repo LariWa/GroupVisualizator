@@ -3,7 +3,7 @@ export default function define(runtime, observer) {
   const fileAttachments = new Map([
     ["flare-2.json", new URL("./data/data", import.meta.url)],
   ]);
-  
+
   let groupMembers = [];
 
   main.builtin(
@@ -52,7 +52,7 @@ Further, does it allow for the selection of group members. You can see the group
             .on("mouseleave", (event, d) => endHover(d))
             .on("click", (event, d) => updateGroup(event));
 
-          node.append("title").text((d) => `${name(d)}\n${format(d.value)}`);
+          node.append("title").text((d) => `${name(d)}\n${parseInt(d.value)/100}`);
 
           node
             .append("rect")
@@ -78,7 +78,7 @@ Further, does it allow for the selection of group members. You can see the group
             .data((d) =>
               (d === root ? name(d) : d.data.name)
                 .split(/(?=[A-Z][^A-Z])/g)
-                .concat(format(d.value))
+                .concat(parseInt(d.value)/100)
             )
             .join("tspan")
             .attr("x", 3)
