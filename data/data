@@ -358,7 +358,13 @@
         {"name": "IcicleTreeLayout", "value": 4864},
         {"name": "IndentedTreeLayout", "value": 3174},
         {"name": "Layout", "value": 7881},
-        {"name": "NodeLinkTreeLayout", "value": 12870},
+        {"name": "NodeLinkTreeLayout", "value": 12870, "info": "hobies blabalbdlasdfblfbdsfhosdhf", "barData":[
+            {"name": "informationVisualization", "value":2},
+            {"name": "math", "value":2},
+            {"name": "design", "value":2},
+            {"name": "teamwork", "value":7},
+                        {"name": "programming", "value":3.75}]},
+
         {"name": "PieLayout", "value": 2728},
         {"name": "RadialTreeLayout", "value": 12348},
         {"name": "RandomLayout", "value": 870},
