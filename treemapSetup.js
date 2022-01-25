@@ -3,6 +3,9 @@ export default function define(runtime, observer) {
   const fileAttachments = new Map([
     ["flare-2.json", new URL("./data/data", import.meta.url)],
   ]);
+  
+  let groupMembers = [];
+
   main.builtin(
     "FileAttachment",
     runtime.fileAttachments((name) => fileAttachments.get(name))
@@ -54,6 +57,8 @@ Further, does it allow for the selection of group members. You can see the group
           node
             .append("rect")
             .attr("id", (d) => (d.leafUid = DOM.uid("leaf")).id)
+            .attr("value", (d) => (d.data.ID))
+            .attr("name", (d) => `${name(d)}`)
             .attr("fill", (d) =>
               d === root ? "#fff" : d.children ? "#ccc" : "#ddd"
             )
@@ -106,11 +111,35 @@ Further, does it allow for the selection of group members. You can see the group
             .attr("height", (d) => (d === root ? 30 : y(d.y1) - y(d.y0)));
         }
         function updateGroup(event) {
-          // $(event.target).toggleClass("select");
-          // group = $(".select").prev().text();
-          // $("#group-members-").append(group);
-          // console.log(group);
+          let element = $('#' + event.target.id)[0];
+          let value = element.getAttribute('value');
+          let name = element.getAttribute('name');
+
+          let obj = {value: value, name: name.substring(name.lastIndexOf("/") + 1, name.length)};
+
+          if (groupMembers.some(member => member.value === value)) {
+            $('#' + event.target.id).removeClass('select');
+            groupMembers.splice(groupMembers.indexOf(obj), 1);
+          } else {
+              groupMembers.push(obj);
+          }
+
+          $("#members").text('');
+          showMembers();
         }
+
+        function showMembers() {
+          if (!$('#members').length > 0) {
+            $("#group-members-").append('<div id="members"></div>');
+          }
+
+          $.each( groupMembers, function( index, obj ){
+            let element = 'rect[value=' + obj.value + ']';
+            $(element).addClass('select');
+            $("#members").append(obj.name + "<br>");
+          });
+        }
+
         // When zooming in, draw the new nodes on top, and fade them in.
         function zoomin(d) {
           const group0 = group.attr("pointer-events", "none");
@@ -129,6 +158,9 @@ Further, does it allow for the selection of group members. You can see the group
                 .attrTween("opacity", () => d3.interpolate(0, 1))
                 .call(position, d)
             );
+
+            $("#members").text('');
+            showMembers();
         }
         function hover(event, d, node) {
           console.log("enter");
@@ -240,9 +272,8 @@ Further, does it allow for the selection of group members. You can see the group
         );
     });
   main.variable(observer()).define(["md"], function (md) {
-    return md`
-This custom tiling function adapts the built-in binary tiling function for the appropriate aspect ratio when the treemap is zoomed-in.`;
-  });
+    //return md`This custom tiling function adapts the built-in binary tiling function for the appropriate aspect ratio when the treemap is zoomed-in.`;
+});
   main
     .variable(observer("tile"))
     .define("tile", ["d3", "width", "height"], function (d3, width, height) {
@@ -276,5 +307,5 @@ This custom tiling function adapts the built-in binary tiling function for the a
   main.variable(observer("d3")).define("d3", ["require"], function (require) {
     return require("d3@6");
   });
-  return main;
+  //return main;
 }
