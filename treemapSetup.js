@@ -446,7 +446,7 @@ export default function define(runtime, observer) {
     return 954;
   });
   main.variable(observer("height")).define("height", function () {
-    return 924;
+    return 400;
   });
   main.variable(observer("format")).define("format", ["d3"], function (d3) {
     return d3.format(",d");
