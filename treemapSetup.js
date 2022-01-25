@@ -119,13 +119,21 @@ Further, does it allow for the selection of group members. You can see the group
 
           if (groupMembers.some(member => member.value === value)) {
             $('#' + event.target.id).removeClass('select');
-            groupMembers.splice(groupMembers.indexOf(obj), 1);
+            groupMembers.splice(search(value), 1);
           } else {
               groupMembers.push(obj);
           }
 
           $("#members").text('');
           showMembers();
+        }
+
+        function search(value){
+          for (var i=0; i < groupMembers.length; i++) {
+            if (groupMembers[i].value === value) {
+              return i;
+            }
+          }
         }
 
         function showMembers() {
@@ -163,7 +171,7 @@ Further, does it allow for the selection of group members. You can see the group
             showMembers();
         }
         function hover(event, d, node) {
-          console.log("enter");
+          //console.log("enter");
           // set the dimensions and margins of the graph
           const margin = { top: 20, right: 30, bottom: 30, left: 90 },
             width = 300 - margin.left - margin.right,
@@ -233,7 +241,7 @@ Further, does it allow for the selection of group members. You can see the group
           //   .text("Previous classes: " + d.data.Courses);
         }
         function endHover() {
-          console.log("leave");
+          //console.log("leave");
           document.getElementById("barchart").remove();
         }
         function getOffset(el) {
