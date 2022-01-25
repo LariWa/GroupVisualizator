@@ -9,9 +9,10 @@ export default function define(runtime, observer) {
   );
   main.variable(observer()).define(["md"], function (md) {
     return md`
-# Group Matching Tool
+    # Group Matching Tool
 
-This treemap supports zooming: click any cell to zoom in, or the top to zoom out.`;
+    This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
+    Further, does it allow for the selection of group members. You can see the group score below the treemap.`;
   });
   main
     .variable(observer("chart"))
@@ -210,6 +211,13 @@ This treemap supports zooming: click any cell to zoom in, or the top to zoom out
         return svg.node();
       }
     );
+
+    main.variable(observer()).define(["md"], function(md) {
+      return (
+        md `## Group Members:`
+      )
+    });
+
   main
     .variable(observer("data"))
     .define("data", ["FileAttachment"], function (FileAttachment) {

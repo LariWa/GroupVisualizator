@@ -24,6 +24,14 @@ h1 {
   text-transform: uppercase;
 }
 
+h1+p {
+  margin: 0 20vw 30px 20vw;
+}
+
+.select {
+  fill: #F2E205;
+}
+
 .observablehq--collapsed, .observablehq--expanded, .observablehq--function, .observablehq--gray, .observablehq--import, .observablehq--string:after, .observablehq--string:before {
   color: var(--syntax_normal)
 }
