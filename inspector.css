@@ -41,6 +41,20 @@ h1 + p {
   display: none;
 }
 
+#group-members- {
+  width: 45vw;
+  float: left;
+}
+
+#members {
+  margin-top: 1rem;
+}
+
+#scoreValues {
+  padding: 0 10vw;
+  display: flex;
+}
+
 .observablehq--collapsed,
 .observablehq--expanded,
 .observablehq--function,

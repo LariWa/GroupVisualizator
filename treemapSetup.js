@@ -399,7 +399,7 @@ export default function define(runtime, observer) {
 
   main.variable(observer()).define(["md"], function (md) {
     return md`
-### Score:`;
+## Score:`;
   });
 
   main
