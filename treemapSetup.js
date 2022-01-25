@@ -12,10 +12,10 @@ export default function define(runtime, observer) {
   );
   main.variable(observer()).define(["md"], function (md) {
     return md`
-  # Group Matching Tool
+# Group Matching Tool
 
-  This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
-  Further, does it allow for the selection of group members. You can see the group score below the treemap.`;
+      This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
+      Further, does it allow for the selection of group members. You can see the group score below the treemap.`;
   });
   main
     .variable(observer("chart"))
@@ -52,12 +52,14 @@ export default function define(runtime, observer) {
             .on("mouseleave", (event, d) => endHover(d))
             .on("click", (event, d) => updateGroup(event, d));
 
-          node.append("title").text((d) => `${name(d)}\n${parseInt(d.value)/100}`);
+          node
+            .append("title")
+            .text((d) => `${name(d)}\n${parseInt(d.value) / 100}`);
 
           node
             .append("rect")
             .attr("id", (d) => (d.leafUid = DOM.uid("leaf")).id)
-            .attr("value", (d) => (d.data.ID))
+            .attr("value", (d) => d.data.ID)
             .attr("name", (d) => `${name(d)}`)
             .attr("fill", (d) =>
               d === root ? "#fff" : d.children ? "#ccc" : "#ddd"
@@ -78,7 +80,7 @@ export default function define(runtime, observer) {
             .data((d) =>
               (d === root ? name(d) : d.data.name)
                 .split(/(?=[A-Z][^A-Z])/g)
-                .concat(parseInt(d.value)/100)
+                .concat(parseInt(d.value) / 100)
             )
             .join("tspan")
             .attr("x", 3)
@@ -111,37 +113,36 @@ export default function define(runtime, observer) {
             .attr("height", (d) => (d === root ? 30 : y(d.y1) - y(d.y0)));
         }
         function updateGroup(event, data) {
-          let element = $('#' + event.target.id)[0];
-          let value = element.getAttribute('value');
-          let name = element.getAttribute('name');
+          let element = $("#" + event.target.id)[0];
+          let value = element.getAttribute("value");
+          let name = element.getAttribute("name");
 
-          console.log(data.data.art / 100 );
+          console.log(data.data.art / 100);
 
           let obj = {
             value: value,
             name: name.substring(name.lastIndexOf("/") + 1, name.length),
-            art: data.data.art/100,
-            math: data.data.math/100,
-            programming: data.data.Programming/100,
-            visualization: data.data.infoVisualization/100,
-            teamwork: data.data.TeamWork/100
-            };
+            art: data.data.art / 100,
+            math: data.data.math / 100,
+            programming: data.data.Programming / 100,
+            visualization: data.data.infoVisualization / 100,
+            teamwork: data.data.TeamWork / 100,
+          };
 
-
-          if (groupMembers.some(member => member.value === value)) {
-            $('#' + event.target.id).removeClass('select');
+          if (groupMembers.some((member) => member.value === value)) {
+            $("#" + event.target.id).removeClass("select");
             groupMembers.splice(search(value), 1);
           } else {
-              groupMembers.push(obj);
+            groupMembers.push(obj);
           }
 
-          $("#members").text('');
+          $("#members").text("");
           showMembers();
           calculateScore();
         }
 
-        function search(value){
-          for (var i=0; i < groupMembers.length; i++) {
+        function search(value) {
+          for (var i = 0; i < groupMembers.length; i++) {
             if (groupMembers[i].value === value) {
               return i;
             }
@@ -149,19 +150,19 @@ export default function define(runtime, observer) {
         }
 
         function showMembers() {
-          if (!$('#members').length > 0) {
+          if (!$("#members").length > 0) {
             $("#group-members-").append('<div id="members"></div>');
           }
 
-          $.each( groupMembers, function( index, obj ){
-            let element = 'rect[value=' + obj.value + ']';
-            $(element).addClass('select');
+          $.each(groupMembers, function (index, obj) {
+            let element = "rect[value=" + obj.value + "]";
+            $(element).addClass("select");
             $("#members").append(obj.name + "<br>");
           });
         }
 
         function calculateScore() {
-          if (!$('#scoreValues').length > 0) {
+          if (!$("#scoreValues").length > 0) {
             $("#score-").append('<p id="scoreValues"></p>');
           }
 
@@ -171,7 +172,7 @@ export default function define(runtime, observer) {
           let visualization = 0;
           let teamwork = 0;
 
-          $.each(groupMembers, function( index, obj ){
+          $.each(groupMembers, function (index, obj) {
             art += obj.art;
             math += obj.math;
             programming += obj.programming;
@@ -179,13 +180,87 @@ export default function define(runtime, observer) {
             teamwork += obj.teamwork;
           });
 
-          $('#scoreValues').text( 'Art: ' + (art/groupMembers.length).toFixed(2) +
-                                  ', Math: ' + (math/groupMembers.length).toFixed(2) +
-                                  ', Programming: ' + (programming/groupMembers.length).toFixed(2) +
-                                  ', Visualization: ' + (visualization/groupMembers.length).toFixed(2) +
-                                  ', Teamwork: ' + (teamwork/groupMembers.length).toFixed(2)
-                                );
+          $("#scoreValues").text(
+            "Art: " +
+              (art / groupMembers.length).toFixed(2) +
+              ", Math: " +
+              (math / groupMembers.length).toFixed(2) +
+              ", Programming: " +
+              (programming / groupMembers.length).toFixed(2) +
+              ", Visualization: " +
+              (visualization / groupMembers.length).toFixed(2) +
+              ", Teamwork: " +
+              (teamwork / groupMembers.length).toFixed(2)
+          );
+          var chart = document.getElementById("scoreBarchart");
+          if (chart) chart.remove();
 
+          const margin = {
+              top: 20,
+              right: 30,
+              bottom: 30,
+              left: 90,
+            },
+            width = 300 - margin.left - margin.right,
+            height = 200 - margin.top - margin.bottom;
+          var padding = 40;
+          // append the svg object to the body of the page
+          const svg = d3
+            .select("#scoreBar")
+            .append("div")
+            .attr("id", "scoreBarchart")
+
+            .append("svg")
+            .attr("id", "scorebarchartSVG")
+
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+          const x = d3.scaleLinear().domain([0, 10]).range([0, width]);
+          svg
+            .append("g")
+            .attr("transform", `translate(0, ${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .attr("transform", "translate(-10,0)rotate(-45)")
+            .style("text-anchor", "end");
+
+          // data = d.data.barData;
+          data = [
+            { name: "Art", value: art / groupMembers.length },
+            { name: "Math ", value: math / groupMembers.length },
+            {
+              name: "Programming",
+              value: programming / groupMembers.length,
+            },
+
+            {
+              name: "Info \n Visu..",
+              value: visualization / groupMembers.length,
+            },
+            { name: "Team Work", value: teamwork / groupMembers.length },
+          ];
+          console.log(data);
+          // Y axis
+          const y = d3
+            .scaleBand()
+            .range([0, height])
+            .domain(data.map((d) => d.name))
+            .padding(0.1);
+          svg.append("g").call(d3.axisLeft(y));
+
+          //Bars
+          svg
+            .selectAll("myRect")
+            .data(data)
+            .join("rect")
+            .attr("x", x(0))
+            .attr("y", (d) => y(d.name))
+            .attr("width", (d) => x(d.value))
+            .attr("height", y.bandwidth())
+            .attr("fill", "#69b3a2");
         }
 
         // When zooming in, draw the new nodes on top, and fade them in.
@@ -207,8 +282,8 @@ export default function define(runtime, observer) {
                 .call(position, d)
             );
 
-            $("#members").text('');
-            showMembers();
+          $("#members").text("");
+          showMembers();
         }
         function hover(event, d, node) {
           //console.log("enter");
@@ -218,6 +293,7 @@ export default function define(runtime, observer) {
             height = 200 - margin.top - margin.bottom;
           var padding = 40;
           // append the svg object to the body of the page
+
           const svg = d3
             .select("#my_dataviz")
             .append("div")
@@ -318,12 +394,12 @@ export default function define(runtime, observer) {
 
   main.variable(observer()).define(["md"], function (md) {
     return md`
-  ## Group Members:`;
+## Group Members:`;
   });
 
   main.variable(observer()).define(["md"], function (md) {
     return md`
-  ### Score:`;
+### Score:`;
   });
 
   main
@@ -379,4 +455,4 @@ export default function define(runtime, observer) {
     return require("d3@6");
   });
   //return main;
-  }
+}
