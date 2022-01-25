@@ -8,13 +8,11 @@ export default function define(runtime, observer) {
     runtime.fileAttachments((name) => fileAttachments.get(name))
   );
   main.variable(observer()).define(["md"], function (md) {
-    return (
-      md `# Group Matching Tool
+    return md`
+# Group Matching Tool
 
 This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
-Further, does it allow for the selection of group members. You can see the group score below the treemap.
-`
-    )
+Further, does it allow for the selection of group members. You can see the group score below the treemap.`;
   });
   main
     .variable(observer("chart"))
@@ -48,7 +46,8 @@ Further, does it allow for the selection of group members. You can see the group
             .filter((d) => d.height === 0)
             .attr("cursor", "pointer")
             .on("mouseenter", (event, d) => hover(event, d))
-            .on("mouseleave", (event, d) => endHover(d));
+            .on("mouseleave", (event, d) => endHover(d))
+            .on("click", (event, d) => updateGroup(event));
 
           node.append("title").text((d) => `${name(d)}\n${format(d.value)}`);
 
@@ -106,7 +105,12 @@ Further, does it allow for the selection of group members. You can see the group
             .attr("width", (d) => (d === root ? width : x(d.x1) - x(d.x0)))
             .attr("height", (d) => (d === root ? 30 : y(d.y1) - y(d.y0)));
         }
-
+        function updateGroup(event) {
+          // $(event.target).toggleClass("select");
+          // group = $(".select").prev().text();
+          // $("#group-members-").append(group);
+          // console.log(group);
+        }
         // When zooming in, draw the new nodes on top, and fade them in.
         function zoomin(d) {
           const group0 = group.attr("pointer-events", "none");
@@ -214,11 +218,10 @@ Further, does it allow for the selection of group members. You can see the group
       }
     );
 
-    main.variable(observer()).define(["md"], function(md) {
-      return (
-        md `## Group Members:`
-      )
-    });
+  main.variable(observer()).define(["md"], function (md) {
+    return md`
+## Group Members:`;
+  });
 
   main
     .variable(observer("data"))
