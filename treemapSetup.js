@@ -12,10 +12,10 @@ export default function define(runtime, observer) {
   );
   main.variable(observer()).define(["md"], function (md) {
     return md`
-# Group Matching Tool
+  # Group Matching Tool
 
-This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
-Further, does it allow for the selection of group members. You can see the group score below the treemap.`;
+  This treemap supports zooming: click any cell to zoom in, or the top to zoom out.
+  Further, does it allow for the selection of group members. You can see the group score below the treemap.`;
   });
   main
     .variable(observer("chart"))
@@ -50,7 +50,7 @@ Further, does it allow for the selection of group members. You can see the group
             .attr("cursor", "pointer")
             .on("mouseenter", (event, d) => hover(event, d))
             .on("mouseleave", (event, d) => endHover(d))
-            .on("click", (event, d) => updateGroup(event));
+            .on("click", (event, d) => updateGroup(event, d));
 
           node.append("title").text((d) => `${name(d)}\n${parseInt(d.value)/100}`);
 
@@ -110,12 +110,23 @@ Further, does it allow for the selection of group members. You can see the group
             .attr("width", (d) => (d === root ? width : x(d.x1) - x(d.x0)))
             .attr("height", (d) => (d === root ? 30 : y(d.y1) - y(d.y0)));
         }
-        function updateGroup(event) {
+        function updateGroup(event, data) {
           let element = $('#' + event.target.id)[0];
           let value = element.getAttribute('value');
           let name = element.getAttribute('name');
 
-          let obj = {value: value, name: name.substring(name.lastIndexOf("/") + 1, name.length)};
+          console.log(data.data.art / 100 );
+
+          let obj = {
+            value: value,
+            name: name.substring(name.lastIndexOf("/") + 1, name.length),
+            art: data.data.art/100,
+            math: data.data.math/100,
+            programming: data.data.Programming/100,
+            visualization: data.data.infoVisualization/100,
+            teamwork: data.data.TeamWork/100
+            };
+
 
           if (groupMembers.some(member => member.value === value)) {
             $('#' + event.target.id).removeClass('select');
@@ -126,6 +137,7 @@ Further, does it allow for the selection of group members. You can see the group
 
           $("#members").text('');
           showMembers();
+          calculateScore();
         }
 
         function search(value){
@@ -146,6 +158,34 @@ Further, does it allow for the selection of group members. You can see the group
             $(element).addClass('select');
             $("#members").append(obj.name + "<br>");
           });
+        }
+
+        function calculateScore() {
+          if (!$('#scoreValues').length > 0) {
+            $("#score-").append('<p id="scoreValues"></p>');
+          }
+
+          let art = 0;
+          let math = 0;
+          let programming = 0;
+          let visualization = 0;
+          let teamwork = 0;
+
+          $.each(groupMembers, function( index, obj ){
+            art += obj.art;
+            math += obj.math;
+            programming += obj.programming;
+            visualization += obj.visualization;
+            teamwork += obj.teamwork;
+          });
+
+          $('#scoreValues').text( 'Art: ' + (art/groupMembers.length).toFixed(2) +
+                                  ', Math: ' + (math/groupMembers.length).toFixed(2) +
+                                  ', Programming: ' + (programming/groupMembers.length).toFixed(2) +
+                                  ', Visualization: ' + (visualization/groupMembers.length).toFixed(2) +
+                                  ', Teamwork: ' + (teamwork/groupMembers.length).toFixed(2)
+                                );
+
         }
 
         // When zooming in, draw the new nodes on top, and fade them in.
@@ -278,7 +318,12 @@ Further, does it allow for the selection of group members. You can see the group
 
   main.variable(observer()).define(["md"], function (md) {
     return md`
-## Group Members:`;
+  ## Group Members:`;
+  });
+
+  main.variable(observer()).define(["md"], function (md) {
+    return md`
+  ### Score:`;
   });
 
   main
@@ -299,7 +344,7 @@ Further, does it allow for the selection of group members. You can see the group
     });
   main.variable(observer()).define(["md"], function (md) {
     //return md`This custom tiling function adapts the built-in binary tiling function for the appropriate aspect ratio when the treemap is zoomed-in.`;
-});
+  });
   main
     .variable(observer("tile"))
     .define("tile", ["d3", "width", "height"], function (d3, width, height) {
@@ -334,4 +379,4 @@ Further, does it allow for the selection of group members. You can see the group
     return require("d3@6");
   });
   //return main;
-}
+  }
