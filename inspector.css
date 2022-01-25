@@ -37,6 +37,10 @@ h1 + p {
   fill: #f2e205;
 }
 
+.hide {
+  display: none;
+}
+
 .observablehq--collapsed,
 .observablehq--expanded,
 .observablehq--function,
