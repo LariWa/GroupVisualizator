@@ -9,9 +9,9 @@ export default function define(runtime, observer) {
   );
   main.variable(observer()).define(["md"], function (md) {
     return md`
-# Zoomable Treemap
+# Group Matching Tool
 
-This [treemap](/@d3/treemap) supports zooming: click any cell to zoom in, or the top to zoom out.`;
+This treemap supports zooming: click any cell to zoom in, or the top to zoom out.`;
   });
   main
     .variable(observer("chart"))
